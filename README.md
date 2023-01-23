@@ -31,3 +31,6 @@ ALX project done to facilitate completion of Full Stack Software Engineering cou
 | `106-bitonic_sort.c` | `106-O` | Sorts an array of integers in ascending order using the Bitonic sort algorithm. |
 | `107-quick_sort_hoare.c` | `107-O` | Sorts an array of integers in ascending order using the Quick sort algorithm. Note: Implement Hoare partition scheme. |
 | `1000-sort_deck.c` | | Sorts a deck of cards. |
+
+## Author
+* [`Emmanuel Mamai`](https://github.com/MamaiTheCoder)
