@@ -15,7 +15,7 @@ ALX project done to facilitate completion of Full Stack Software Engineering cou
 * The `<filename>-O` files contains the big O notations of the time complexity of different sorting algorithms
 * The time complexity of the algorithms focuses on `best`, `average`, and `worst` case scenarios.
 
-Files
+## Files
 | Filename | Time complexity file | Function of the file |
 | --------- | ---------- | ---------- |
 | `0-bubble_sort.c` | `0-O` | Sorts an array of integers in ascending order using the Bubble sort algorithm. |
@@ -31,5 +31,3 @@ Files
 | `106-bitonic_sort.c` | `106-O` | Sorts an array of integers in ascending order using the Bitonic sort algorithm. |
 | `107-quick_sort_hoare.c` | `107-O` | Sorts an array of integers in ascending order using the Quick sort algorithm. Note: Implement Hoare partition scheme. |
 | `1000-sort_deck.c` | | Sorts a deck of cards. |
-
-
