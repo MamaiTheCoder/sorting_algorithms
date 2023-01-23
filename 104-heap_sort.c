@@ -1,60 +1,84 @@
 #include "sort.h"
+#include <stdio.h>
+/**
+ * swap_nums - swaps numbers
+ *
+ * @arr: input array
+ * @a: first index
+ * @b: second index
+ * Return: no return
+ */
+void swap_nums(int *arr, int a, int b)
+{
+	arr[a] = arr[a] + arr[b];
+	arr[b] = arr[a] - arr[b];
+	arr[a] = arr[a] - arr[b];
+}
 
 /**
- * heap_sort - sorts an array following the Heap sort algorithm
- * @array: array of ints to sort
- * @size: size of the array to sort
+ * recursion_heap - recursion that builds the max heap tree
+ *
+ * @arr: input array
+ * @i: index number
+ * @size: size of the array
+ * @limit: limit of the array
+ * Return: no return
  */
-void heap_sort(int *array, size_t size)
+void recursion_heap(int *arr, int i, size_t size, int limit)
 {
-	int i;
-	int tmp;
+	int bigger;
+	int i2;
 
-	if (size < 2)
+	i2 = i * 2;
+
+	if (i2 + 2 < limit)
+	{
+		recursion_heap(arr, i2 + 1, size, limit);
+		recursion_heap(arr, i2 + 2, size, limit);
+	}
+
+	if (i2 + 1 >= limit)
 		return;
 
-	for (i = size / 2 - 1; i >= 0; i--)
-		heapify(array, size, (size_t)i, size);
+	if (i2 + 2 < limit)
+		bigger = (arr[i2 + 1] > arr[i2 + 2]) ? (i2 + 1) : (i2 + 2);
+	else
+		bigger = i2 + 1;
 
-	for (i = size - 1; i >= 0; i--)
+	if (arr[i] < arr[bigger])
 	{
-		tmp = array[i];
-		array[i] = array[0];
-		array[0] = tmp;
-		if (i != 0)
-			print_array(array, size);
-		heapify(array, (size_t)i, 0, size);
+		swap_nums(arr, i, bigger);
+		print_array(arr, size);
+		recursion_heap(arr, bigger, size, limit);
 	}
 }
 
 /**
- * heapify - turns an array in a heap tree
- * @array: array to turn into heap
- * @s: size of the subtree
- * @root: index of the subtree in the heap
- * @size: size of the whole array
+ * heap_sort - sorts an array of integers in ascending
+ * order using the Heap sort algorithm
+ *
+ * @array: input array
+ * @size: size of the array
  */
-void heapify(int *array, size_t s, size_t root, size_t size)
+void heap_sort(int *array, size_t size)
 {
-	size_t max, left, right;
-	int tmp;
+	int i;
+	size_t limit;
 
-	max = root;
-	left = (root * 2) + 1;
-	right = (root * 2) + 2;
+	if (!array || size == 0)
+		return;
 
-	if (left < s && array[left] > array[max])
-		max = left;
+	i = 0;
+	limit = size;
 
-	if (right < s && array[right] > array[max])
-		max = right;
-
-	if (max != root)
+	while (limit > 1)
 	{
-		tmp = array[root];
-		array[root] = array[max];
-		array[max] = tmp;
-		print_array(array, size);
-		heapify(array, s, max, size);
+		recursion_heap(array, i, size, limit);
+		if (array[i] >= array[limit - 1])
+		{
+			swap_nums(array, i, limit - 1);
+			print_array(array, size);
+		}
+		limit--;
 	}
 }
