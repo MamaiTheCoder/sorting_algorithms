@@ -1,75 +1,139 @@
 #include "sort.h"
+#include <stdio.h>
+/**
+ * print_bitonic - prints the array modified by
+ * bitonic algorithm
+ *
+ * @arr: input array
+ * @i: first index
+ * @limit: last index
+ * Return: no return
+ */
+void print_bitonic(int *arr, int i, int limit)
+{
+	char *sep;
+
+	for (sep = ""; i < limit; i++)
+	{
+		printf("%s%d", sep, arr[i]);
+		sep = ", ";
+	}
+	printf("\n");
+}
 
 /**
- * bitonic_sort - sorts an array following the Bitonic sort algorithm
- * @array: array of ints to sort
+ * sort_up - sorts the array in UP mode
+ *
+ * @arr: input array
+ * @low: first index
+ * @high: last index
+ * Return: no return
+ */
+void sort_up(int *arr, int low, int high)
+{
+	int i, j, max;
+
+	for (i = low; i < high; i++)
+	{
+		max = i;
+
+		for (j = i + 1; j < high; j++)
+		{
+			if (arr[max] > arr[j])
+				max = j;
+		}
+
+		if (max != i)
+		{
+			arr[i] = arr[i] + arr[max];
+			arr[max] = arr[i] - arr[max];
+			arr[i] = arr[i] - arr[max];
+		}
+	}
+}
+
+/**
+ * sort_down - sorts the array in DOWN mode
+ *
+ * @arr: input array
+ * @low: first index
+ * @high: last index
+ * Return: no return
+ */
+void sort_down(int *arr, int low, int high)
+{
+	int i, j, max;
+
+	for (i = low; i < high; i++)
+	{
+		max = i;
+
+		for (j = i + 1; j < high; j++)
+		{
+			if (arr[max] < arr[j])
+				max = j;
+		}
+
+		if (max != i)
+		{
+			arr[i] = arr[i] + arr[max];
+			arr[max] = arr[i] - arr[max];
+			arr[i] = arr[i] - arr[max];
+		}
+	}
+}
+
+/**
+ * recursion - recursive function that executes the bitonic sort
+ * algorithm
+ *
+ * @arr: input array
+ * @low: first index
+ * @high: last index
+ * @bool: UP or DOWN
  * @size: size of the array
+ * Return: no return
+ */
+void recursion(int *arr, int low, int high, int bool, size_t size)
+{
+	char *option;
+
+	if (high - low < 2)
+		return;
+
+	option = (bool == 0) ? "UP" : "DOWN";
+	printf("Merging [%d/%ld] (%s):\n", high - low, size, option);
+	print_bitonic(arr, low, high);
+
+	if (high - low == 2)
+		return;
+
+	recursion(arr, low, (high + low) / 2, 0, size);
+	sort_up(arr, low, (high + low) / 2);
+	printf("Result [%d/%ld] (%s):\n", ((high + low) / 2) - low, size, "UP");
+	print_bitonic(arr, low, (high + low) / 2);
+
+	recursion(arr, (high + low) / 2, high, 1, size);
+	sort_down(arr, (high + low) / 2, high);
+	printf("Result [%d/%ld] (%s):\n", high - ((high + low) / 2), size, "DOWN");
+	print_bitonic(arr, (high + low) / 2, high);
+}
+
+/**
+ * bitonic_sort - first function that executes the bitonic_sort
+ * algorithm
+ *
+ * @array: input array
+ * @size: size of the array
+ * Return: no return
  */
 void bitonic_sort(int *array, size_t size)
 {
 	if (!array || size < 2)
 		return;
 
-	bitonic_recursion(array, 0, size - 1, 1, size);
-}
-
-/**
- * bitonic_recursion - recursive function for bitonic sort
- * @array: array to sort
- * @l: index of the left-most element
- * @r: index of the right-most element
- * @direction: ascending or descending
- * @size: size of the array
- */
-void bitonic_recursion(int *array, int l, int r, int direction, size_t size)
-{
-	int step;
-
-	if (r - l >= 1)
-	{
-		step = (r + l) / 2;
-		printf("Merging [%d/%lu] ", r - l + 1, size);
-		if (direction)
-			printf("(UP):\n");
-		else
-			printf("(DOWN):\n");
-		print_array(array + l, r - l + 1);
-		bitonic_recursion(array, l, step, 1, size);
-		bitonic_recursion(array, step + 1, r, 0, size);
-		bitonic_merge(array, l, r, direction);
-		printf("Result [%d/%lu] ", r - l + 1, size);
-		if (direction)
-			printf("(UP):\n");
-		else
-			printf("(DOWN):\n");
-		print_array(array + l, r - l + 1);
-	}
-}
-
-/**
- * bitonic_merge - sorts and merges a sequence in ascending or descending order
- * @array: array to sort
- * @l: index of the left-most element
- * @r: index of the right-most element
- * @direction: ascending or descending
- */
-void bitonic_merge(int *array, int l, int r, int direction)
-{
-	int tmp, i, step = (l + r) / 2, mid = (r - l + 1) / 2;
-
-	if (r - l >= 1)
-	{
-		for (i = l; i < l + mid; i++)
-		{
-			if (direction == (array[i] > array[i + mid]))
-			{
-				tmp = array[i + mid];
-				array[i + mid] = array[i];
-				array[i] = tmp;
-			}
-		}
-		bitonic_merge(array, l, step, direction);
-		bitonic_merge(array, step + 1, r, direction);
-	}
-
+	recursion(array, 0, size, 0, size);
+	sort_up(array, 0, size);
+	printf("Result [%ld/%ld] (%s):\n", size, size, "UP");
+	print_bitonic(array, 0, size);
 }
